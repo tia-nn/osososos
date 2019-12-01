@@ -1,0 +1,22 @@
+; about drive
+
+SECT_SIZE   equ (512)
+
+BOOT_LOAD   equ 0x7c00
+BOOT_SIZE   equ (1024 * 8)
+BOOT_SECT   equ (BOOT_SIZE / SECT_SIZE)
+BOOT_END    equ (BOOT_LOAD + BOOT_SIZE)
+
+KERNEL_SIZE equ (1024 * 8)
+KERNEL_LOAD equ (0x0010_1000)
+KERNEL_SECT equ (KERNEL_SIZE / SECT_SIZE)
+
+; about memory
+E820_RECORD_SIZE    equ 20
+
+; kbc
+
+%define KBC_CMD_KEYBOARD_DISABLE 0xad
+%define KBC_CMD_KEYBOARD_ENABLE 0xae
+%define KBC_CMD_READ_OUTPUTPORT 0xd0
+%define KBC_CMD_WRITE_OUTPUTPORT 0xd1
