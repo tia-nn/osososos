@@ -16,12 +16,14 @@ kernel:
     call init_pic
 
     set_vect 0x00, int_zero_div
+    set_vect 0x20, int_timer
     set_vect 0x21, int_keyboard
     set_vect 0x28, int_rtc
 
     cdecl rtc_int_en, 0x10
+    call int_en_timer0
 
-    outp 0x21, 0b_1111_1001  ; slave pic, kbc
+    outp 0x21, 0b_1111_1000  ; slave pic, kbc, timer
     outp 0xa1, 0b_1111_1110  ; rtc
 
     sti
@@ -36,7 +38,8 @@ kernel:
         .10E:
 
         cdecl draw_time, 72, 0, 0x0700, dword [RTC_TIME]
-        ; hlt
+        call draw_rotation_bar
+        hlt
         jmp .END
 
 
@@ -67,5 +70,8 @@ FONT_ADDR: dd FONT_8_16
 %include "src/modules/protect/int_rtc.s"
 %include "src/modules/protect/ring_buff.s"
 %include "src/modules/protect/int_keyboard.s"
+%include "src/modules/protect/int_timer.s"
+%include "src/modules/protect/timer.s"
+%include "src/modules/protect/draw_rotation_bar.s"
 
 times KERNEL_SIZE - ($ - $$) db 0
