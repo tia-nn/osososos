@@ -6,6 +6,8 @@ IDTR:   dw 8 * 256 - 1
 
 
 int_stop:
+    sti
+    
     cdecl draw_str, 25, 15, 0x060f, eax
 
     mov eax, [esp + 0]

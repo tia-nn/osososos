@@ -16,16 +16,25 @@ kernel:
     call init_pic
 
     set_vect 0x00, int_zero_div
+    set_vect 0x21, int_keyboard
     set_vect 0x28, int_rtc
 
     cdecl rtc_int_en, 0x10
 
-    outp 0x21, 0b_1111_1011  ; slave pic
+    outp 0x21, 0b_1111_1001  ; slave pic, kbc
     outp 0xa1, 0b_1111_1110  ; rtc
 
     sti
 
+    cdecl ringbuff_wr, _KEY_BUFF, 0xff
+
     .END:
+        cdecl ringbuff_rd, _KEY_BUFF, .int_key
+        test eax, eax
+        jz .10E
+            cdecl draw_key, _KEY_BUFF, 2, 29
+        .10E:
+
         cdecl draw_time, 72, 0, 0x0700, dword [RTC_TIME]
         ; hlt
         jmp .END
@@ -34,6 +43,7 @@ kernel:
 .s0: db "Hello, kernel.", 0
 .test: db "hoge", 0
 .time: dd 0
+.int_key: dd 0
 
 
 align 4, db 0
@@ -55,5 +65,7 @@ FONT_ADDR: dd FONT_8_16
 %include "src/modules/protect/interrupt.s"
 %include "src/modules/protect/pic.s"
 %include "src/modules/protect/int_rtc.s"
+%include "src/modules/protect/ring_buff.s"
+%include "src/modules/protect/int_keyboard.s"
 
 times KERNEL_SIZE - ($ - $$) db 0
