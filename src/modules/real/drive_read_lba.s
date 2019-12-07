@@ -15,12 +15,12 @@ drive_read_lba:
     mov si, [bp + 4]  ; drive
     mov ax, [bp + 6]  ; lba
 
-    ccall drive_lba2chs, si, .chs, ax
+    cdecl drive_lba2chs, si, .chs, ax
 
     mov ax, [si + Drive.no]
     mov [.chs + Drive.no], ax
 
-    ccall drive_read_chs, .chs, word [bp + 8], word [bp + 10]
+    cdecl drive_read_chs, .chs, word [bp + 8], word [bp + 10]
 
     rload bx, si
     leave

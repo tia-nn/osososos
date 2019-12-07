@@ -1,0 +1,17 @@
+init_pic:
+    push eax
+    
+    outp 0x20, 0x11  ; icw4 enable
+    outp 0x21, 0x20  ; vect
+    outp 0x21, 0x04  ; srabe cennect at 0b0000_0100
+    outp 0x21, 0x05  ; auto eoi disable 
+    outp 0x21, 0xff  ; mask (all interput disable)
+
+    outp 0xa0, 0x11
+    outp 0xa1, 0x28  ; vect
+    outp 0xa1, 0x02  ; srabe id
+    outp 0xa1, 0x01
+    outp 0xa1, 0xff
+
+    pop eax
+    ret

@@ -2,7 +2,7 @@
 ;   wait for user input and reboot
 
 reboot:
-    ccall puts, .s0
+    cdecl puts, .s0
 
     .10S:
         mov ah, 0x10
@@ -11,7 +11,7 @@ reboot:
         cmp al, ' '
         jne .10S
     
-    ccall puts, .s1
+    cdecl puts, .s1
 
     int 0x19
 

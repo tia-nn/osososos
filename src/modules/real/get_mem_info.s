@@ -4,7 +4,7 @@
 get_mem_info:
     rsave eax, ebx, ecx, edx, si, di, bp
 
-    ccall puts, .s1
+    cdecl puts, .s1
 
     mov bp, 0
     mov ebx, 0
@@ -24,7 +24,7 @@ get_mem_info:
             jmp .10E
         .14E:
 
-        ccall put_mem_info, di
+        cdecl put_mem_info, di
 
         mov eax, [di + 16]
         cmp eax, 3
@@ -41,19 +41,19 @@ get_mem_info:
             inc bp
             and bp, 0x07
             jnz .16E
-                ccall puts, .s2
+                cdecl puts, .s2
                 
                 mov ah, 0x10
                 int 0x16
 
-                ccall puts, .s3
+                cdecl puts, .s3
         .16E:
 
         test ebx, ebx
         jnz .10L
     .10E:
 
-    ccall puts, .s4
+    cdecl puts, .s4
 
     rload eax, ebx, ecx, edx, si, di, bp
     ret
@@ -71,26 +71,26 @@ put_mem_info:
 
     mov si, [bp + 4]
  
-    ccall itoa, word [si + 6], .p2 + 0, 4, 16, 0b0100
-    ccall itoa, word [si + 4], .p2 + 4, 4, 16, 0b0100
-    ccall itoa, word [si + 2], .p3 + 0, 4, 16, 0b0100
-    ccall itoa, word [si + 0], .p3 + 4, 4, 16, 0b0100
+    cdecl itoa, word [si + 6], .p2 + 0, 4, 16, 0b0100
+    cdecl itoa, word [si + 4], .p2 + 4, 4, 16, 0b0100
+    cdecl itoa, word [si + 2], .p3 + 0, 4, 16, 0b0100
+    cdecl itoa, word [si + 0], .p3 + 4, 4, 16, 0b0100
 
-    ccall itoa, word [si + 14], .p4 + 0, 4, 16, 0b0100
-    ccall itoa, word [si + 12], .p4 + 4, 4, 16, 0b0100
-    ccall itoa, word [si + 10], .p5 + 0, 4, 16, 0b0100
-    ccall itoa, word [si + 8], .p5 + 4, 4, 16, 0b0100
+    cdecl itoa, word [si + 14], .p4 + 0, 4, 16, 0b0100
+    cdecl itoa, word [si + 12], .p4 + 4, 4, 16, 0b0100
+    cdecl itoa, word [si + 10], .p5 + 0, 4, 16, 0b0100
+    cdecl itoa, word [si + 8], .p5 + 4, 4, 16, 0b0100
 
-    ccall itoa, word [si + 18], .p6 + 0, 4, 16, 0b0100
-    ccall itoa, word [si + 16], .p6 + 4, 4, 16, 0b0100
+    cdecl itoa, word [si + 18], .p6 + 0, 4, 16, 0b0100
+    cdecl itoa, word [si + 16], .p6 + 4, 4, 16, 0b0100
 
-    ccall puts, .s1
+    cdecl puts, .s1
 
     mov bx, [si + 16]
     and bx, 0x07
     shl bx, 1
     add bx, .t0
-    ccall puts, word [bx]
+    cdecl puts, word [bx]
 
     rload bx, si
     leave

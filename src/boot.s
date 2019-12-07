@@ -30,16 +30,16 @@ stage_1:
     mov [BOOT + Drive.no], dl
 
     ; put boot messgae
-    ccall puts, .boot_message
+    cdecl puts, .boot_message
 
     ; read 2~ stage serctor
     mov bx, BOOT_SECT - 1
     mov cx, BOOT_LOAD + SECT_SIZE
-    ccall drive_read_chs, BOOT, bx, cx
+    cdecl drive_read_chs, BOOT, bx, cx
 
     cmp ax, bx
     je .10E
-        ccall puts, .error_message
+        cdecl puts, .error_message
         call reboot
     .10E:
 
@@ -83,21 +83,21 @@ ACPI_DATA:
 stage_2:
 .text_section:
 
-    ccall puts, .enter_message
+    cdecl puts, .enter_message
 
-    ccall drive_get_param, BOOT
+    cdecl drive_get_param, BOOT
 
     test ax, ax
     jnz .10E
-        ccall puts, .error_message
+        cdecl puts, .error_message
         call reboot
     .10E:
 
-    ccall itoa, word [BOOT + Drive.no], .p1, 2, 16, 0b0100
-    ccall itoa, word [BOOT + Drive.cyln], .p2, 4, 16, 0b0100
-    ccall itoa, word [BOOT + Drive.head], .p3, 2, 16, 0b0100
-    ccall itoa, word [BOOT + Drive.sect], .p4, 2, 16, 0b0100
-    ccall puts, .drive_state_str
+    cdecl itoa, word [BOOT + Drive.no], .p1, 2, 16, 0b0100
+    cdecl itoa, word [BOOT + Drive.cyln], .p2, 4, 16, 0b0100
+    cdecl itoa, word [BOOT + Drive.head], .p3, 2, 16, 0b0100
+    cdecl itoa, word [BOOT + Drive.sect], .p4, 2, 16, 0b0100
+    cdecl puts, .drive_state_str
 
     jmp stage_3
 
@@ -124,23 +124,23 @@ stage_2:
 stage_3:
 .text_section:
     
-    ccall puts, .enter_message
+    cdecl puts, .enter_message
 
-    ccall get_font_addr, FONT
+    cdecl get_font_addr, FONT
 
-    ccall itoa, word [FONT + Addr.seg], .p1, 4, 16, 0b0100
-    ccall itoa, word [FONT + Addr.addr], .p2, 4, 16, 0b0100
-    ccall puts, .font_addr_str
+    cdecl itoa, word [FONT + Addr.seg], .p1, 4, 16, 0b0100
+    cdecl itoa, word [FONT + Addr.addr], .p2, 4, 16, 0b0100
+    cdecl puts, .font_addr_str
 
     call get_mem_info
 
     mov eax, [ACPI_DATA.addr]
     test eax, eax
     jz .10E
-        ccall itoa, ax, .p4, 4, 16, 0b0100
+        cdecl itoa, ax, .p4, 4, 16, 0b0100
         shr eax, 16
-        ccall itoa, ax, .p3, 4, 16, 0b0100
-        ccall puts, .acpi_data_str
+        cdecl itoa, ax, .p3, 4, 16, 0b0100
+        cdecl puts, .acpi_data_str
     .10E:
 
     jmp stage_4
@@ -168,26 +168,26 @@ stage_3:
 stage_4:
 .text_section:
 
-    ccall puts, .enter_message
+    cdecl puts, .enter_message
 
     cli
         ; set A20 gate
-        ccall KBC_cmd_write, KBC_CMD_KEYBOARD_DISABLE
+        cdecl KBC_cmd_write, KBC_CMD_KEYBOARD_DISABLE
         
-        ccall KBC_cmd_write, KBC_CMD_READ_OUTPUTPORT
-        ccall KBC_data_read, .key
+        cdecl KBC_cmd_write, KBC_CMD_READ_OUTPUTPORT
+        cdecl KBC_data_read, .key
 
         mov ax, [.key]
         or ax, 0x00000010  ; A20 gate enable
 
-        ccall KBC_cmd_write, KBC_CMD_WRITE_OUTPUTPORT
-        ccall KBC_data_write, ax
+        cdecl KBC_cmd_write, KBC_CMD_WRITE_OUTPUTPORT
+        cdecl KBC_data_write, ax
 
-        ccall KBC_cmd_write, KBC_CMD_KEYBOARD_ENABLE
+        cdecl KBC_cmd_write, KBC_CMD_KEYBOARD_ENABLE
 
     sti
 
-    ccall puts, .a20_message
+    cdecl puts, .a20_message
 
     jmp stage_5
 
@@ -204,17 +204,17 @@ stage_4:
 stage_5:
 .text_section:
 
-    ccall puts, .enter_message
+    cdecl puts, .enter_message
 
-    ccall drive_read_lba, BOOT, BOOT_SECT, KERNEL_SECT, BOOT_END
+    cdecl drive_read_lba, BOOT, BOOT_SECT, KERNEL_SECT, BOOT_END
 
     cmp ax, KERNEL_SECT
     je .10E
-        ccall puts, .error_message
+        cdecl puts, .error_message
         call reboot
     .10E:
 
-    ccall puts, .done_message
+    cdecl puts, .done_message
 
     jmp stage_6
 
@@ -233,26 +233,80 @@ stage_5:
 stage_6:
 .text_section:
 
-    ccall puts, .enter_message
+    cdecl puts, .enter_message
 
-    .10L:
-        mov ah, 0x00
-        int 0x16
-        cmp al, ' '
-        jne .10L
+    ; .10L:
+    ;     mov ah, 0x00
+    ;     int 0x16
+    ;     cmp al, ' '
+    ;     jne .10L
     
     mov ax, 0x0012
     int 0x10  ; ビデオモード変更
 
-    .END:
-        hlt
-        jmp .END
+    jmp stage_7
 
 
 .data_section:
 
-    .enter_message: db "6th stage.", 10, 13
-                    db 10, 13, " [Push SPACE key to protect mode.]", 10, 13, 0
+    .enter_message: db "6th stage.", 10, 13, 0
+                    ; db 10, 13, " [Push SPACE key to protect mode.]", 10, 13, 0
     
+
+align 4, db 0
+
+GDT:    dq 0x00_0_0_0_0_000000_0000
+.cs:    dq 0x00_c_f_9_a_000000_ffff
+.ds:    dq 0x00_c_f_9_2_000000_ffff
+.gdt_end:
+
+SEL_CODE equ .cs - GDT
+SEL_DATA equ .ds - GDT
+
+GDTR:   dw GDT.gdt_end - GDT - 1
+        dd GDT
+
+IDTR:   dw 0
+        dd 0
+
+
+stage_7:
+.text_section:
+    
+    cli
+
+    lgdt [GDTR]
+    lidt [IDTR]
+
+    mov eax, cr0
+    or ax, 1
+    mov cr0, eax
+
+    jmp $ + 2
+
+
+bits 32
+
+    db 0x66  ; ope size override
+    jmp SEL_CODE:CODE_32
+
+CODE_32: 
+    
+    mov ax, SEL_DATA
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+    mov ss, ax
+
+    mov ecx, (KERNEL_SIZE) / 4
+    mov esi, BOOT_END
+    mov edi, KERNEL_LOAD
+
+    cld
+    rep movsd
+
+    jmp KERNEL_LOAD
+
 
 times BOOT_SIZE - ($ - $$) db 0
