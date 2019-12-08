@@ -1,3 +1,5 @@
+%define USE_SYSTEM_CALL
+
 %include "src/includes/constant.d.s"
 %include "src/includes/macro.m.s"
 %include "src/includes/struct.d.s"
@@ -9,6 +11,8 @@ BITS 32
 kernel:
     set_desc GDT.tss_0, TSS_0
     set_desc GDT.tss_1, TSS_1
+
+    set_gate GDT.call_gate, call_gate
 
     set_desc GDT.ldt, LDT, LDT_LIMIT
 
@@ -27,6 +31,9 @@ kernel:
     set_vect 0x20, int_timer
     set_vect 0x21, int_keyboard
     set_vect 0x28, int_rtc
+    set_vect 0x81, trap_gate_81, 0xef00
+    set_vect 0x82, trap_gate_82, 0xef00
+    set_vect 0x83, trap_gate_83, 0xef00
 
     cdecl rtc_int_en, 0x10
     call int_en_timer0
@@ -86,5 +93,7 @@ FONT_ADDR: dd FONT_8_16
 %include "src/modules/protect/int_timer.s"
 %include "src/modules/protect/timer.s"
 %include "src/modules/protect/draw_rotation_bar.s"
+%include "src/modules/protect/call_gate.s"
+%include "src/modules/protect/trap_gate.s"
 
 times KERNEL_SIZE - ($ - $$) db 0

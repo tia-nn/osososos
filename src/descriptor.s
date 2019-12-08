@@ -4,6 +4,7 @@ GDT:    dq 0x00_0_0_0_0_000000_0000
     .ldt:   dq 0x00_0082_000000_0000
     .tss_0: dq 0x00_0089_000000_0100
     .tss_1: dq 0x00_0089_000000_0100
+    .call_gate: dq 0x0000_ec04_0008_0000
 .end:
 
 CS_KERNEL equ .cs_kernel - GDT
@@ -11,6 +12,7 @@ DS_KERNEL equ .ds_kernel - GDT
 SS_LDT equ .ldt - GDT
 SS_TASK_0 equ .tss_0 - GDT
 SS_TASK_1 equ .tss_1 - GDT
+SS_GATE_0 equ .call_gate - GDT
 
 GDTR: dw GDT.end - GDT - 1
     dd GDT
@@ -19,14 +21,14 @@ GDTR: dw GDT.end - GDT - 1
 LDT: dq 0x0000000000000000
     .cs_task_0: dq 0x00cf9a000000ffff
     .ds_task_0: dq 0x00cf92000000ffff
-    .cs_task_1: dq 0x00cf9a000000ffff
-    .ds_task_1: dq 0x00cf92000000ffff
+    .cs_task_1: dq 0x00cffa000000ffff
+    .ds_task_1: dq 0x00cff2000000ffff
 .end:
 
 CS_TASK_0 equ (.cs_task_0 - LDT) | 4
 DS_TASK_0 equ (.ds_task_0 - LDT) | 4
-CS_TASK_1 equ (.cs_task_1 - LDT) | 4
-DS_TASK_1 equ (.ds_task_1 - LDT) | 4
+CS_TASK_1 equ (.cs_task_1 - LDT) | 4 | 3
+DS_TASK_1 equ (.ds_task_1 - LDT) | 4 | 3
 
 LDT_LIMIT equ .end - LDT - 1
 
