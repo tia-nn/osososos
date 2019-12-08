@@ -11,6 +11,15 @@ int_timer:
 
     outp 0x20, 0x20
 
+    str ax
+    cmp ax, SS_TASK_1
+    je .10F
+        jmp SS_TASK_1:0
+        jmp .10E
+    .10F:
+        jmp SS_TASK_0:0
+    .10E:
+
     pop es
     pop ds
     popad

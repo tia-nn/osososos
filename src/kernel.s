@@ -7,10 +7,18 @@ org KERNEL_LOAD
 BITS 32
 
 kernel:
+    set_desc GDT.tss_0, TSS_0
+    set_desc GDT.tss_1, TSS_1
 
-    cdecl draw_font, 63, 13
-    cdecl draw_str, 25, 14, 0x10f, .s0
-    cdecl draw_color_bar, 63, 4
+    set_desc GDT.ldt, LDT, LDT_LIMIT
+
+    lgdt [GDTR]
+
+    mov esp, SP_TASK_0
+
+    mov ax, SS_TASK_0
+    ltr ax
+
 
     call init_int
     call init_pic
@@ -28,7 +36,10 @@ kernel:
 
     sti
 
-    cdecl ringbuff_wr, _KEY_BUFF, 0xff
+
+    cdecl draw_font, 63, 13
+    cdecl draw_str, 25, 14, 0x10f, .s0
+    cdecl draw_color_bar, 63, 4
 
     .END:
         cdecl ringbuff_rd, _KEY_BUFF, .int_key
@@ -36,14 +47,13 @@ kernel:
         jz .10E
             cdecl draw_key, _KEY_BUFF, 2, 29
         .10E:
-
-        cdecl draw_time, 72, 0, 0x0700, dword [RTC_TIME]
         call draw_rotation_bar
+
         hlt
         jmp .END
 
 
-.s0: db "Hello, kernel.", 0
+.s0: db " Hello, kernel. ", 0
 .test: db "hoge", 0
 .time: dd 0
 .int_key: dd 0
@@ -52,6 +62,9 @@ kernel:
 align 4, db 0
 FONT_ADDR: dd FONT_8_16
 
+%include "src/tasks/task_1.s"
+
+%include "src/descriptor.s"
 
 %include "src/includes/font/hankaku.s"
 %include "src/modules/protect/vga.s"
