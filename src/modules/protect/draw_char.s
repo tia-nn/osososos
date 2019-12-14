@@ -24,6 +24,10 @@ draw_char:
 
     movzx ebx, word [ebp + 16]
 
+    %ifdef USE_TEST_AND_SET
+        cdecl test_and_set, IN_USE
+    %endif
+
     cdecl vga_set_read_plane, 0x03
     cdecl vga_set_write_plane, 0x08
     cdecl vram_font_copy, esi, edi, 0x08, ebx
@@ -40,7 +44,13 @@ draw_char:
     cdecl vga_set_write_plane, 0x01
     cdecl vram_font_copy, esi, edi, 0x01, ebx
 
+    %ifdef USE_TEST_AND_SET
+        mov dword [IN_USE], 0
+    %endif
+
     rload ebx, esi, edi
     leave
     ret
-    
+
+align 4, db 0
+IN_USE: dd 0
