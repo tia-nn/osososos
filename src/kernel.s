@@ -29,9 +29,19 @@ kernel:
 
     call init_int
     call init_pic
+    call init_page
+
+    mov eax, CR3_BASE
+    mov cr3, eax
+
+    mov eax, cr0
+    or eax, (1 << 31)
+    mov cr0, eax
+    jmp $ + 2
 
     set_vect 0x00, int_zero_div
     set_vect 0x07, int_nm
+    set_vect 0x0e, int_pf
     set_vect 0x20, int_timer
     set_vect 0x21, int_keyboard
     set_vect 0x28, int_rtc
@@ -105,5 +115,8 @@ FONT_ADDR: dd FONT_8_16
 %include "src/modules/protect/test_and_set.s"
 %include "src/modules/protect/int_nm.s"
 %include "src/modules/protect/wait_tick.s"
+%include "src/modules/protect/paging.s"
+%include "src/modules/protect/int_pf.s"
+%include "src/modules/protect/memcpy.s"
 
 times KERNEL_SIZE - ($ - $$) db 0

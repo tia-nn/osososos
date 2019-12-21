@@ -4,7 +4,8 @@ task_3:
     push 0
     push 0
 
-    mov esi, DRAW_PARAM
+    ; mov esi, DRAW_PARAM
+    mov esi, 0x0010_8000
 
     mov eax, [esi + Rose.x0]
     mov ebx, [esi + Rose.y0]
@@ -96,7 +97,7 @@ task_3:
 
         int 0x82  ; draw_dot
 
-        cdecl wait_tick, 2
+        cdecl wait_tick, 1
 
         mov ebx, [esi + Rose.color_b]
         int 0x82
