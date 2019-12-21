@@ -14,6 +14,9 @@ kernel:
     set_desc GDT.tss_1, TSS_1
     set_desc GDT.tss_2, TSS_2
     set_desc GDT.tss_3, TSS_3
+    set_desc GDT.tss_4, TSS_4
+    set_desc GDT.tss_5, TSS_5
+    set_desc GDT.tss_6, TSS_6
 
     set_gate GDT.call_gate, call_gate
 

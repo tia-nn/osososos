@@ -18,6 +18,12 @@ int_timer:
     je .12F
     cmp ax, SS_TASK_3
     je .13F
+    cmp ax, SS_TASK_4
+    je .14F
+    cmp ax, SS_TASK_5
+    je .15F
+    cmp ax, SS_TASK_6
+    je .16F
         jmp SS_TASK_1:0
         jmp .10E
     .11F:
@@ -27,6 +33,15 @@ int_timer:
         jmp SS_TASK_3:0
         jmp .10E
     .13F:
+        jmp SS_TASK_4:0
+        jmp .10E
+    .14F:
+        jmp SS_TASK_5:0
+        jmp .10E
+    .15F:
+        jmp SS_TASK_6:0
+        jmp .10E
+    .16F:
         jmp SS_TASK_0:0
         jmp .10E
     .10E:

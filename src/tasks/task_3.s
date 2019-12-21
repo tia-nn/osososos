@@ -90,10 +90,10 @@ task_3:
         add edx, [ebp - 8]
         mov ebx, [esi + Rose.color_f]
 
-        cdecl itoa, ecx, .s4, 6, 10, 0
-        cdecl itoa, edx, .s5, 6, 10, 0
-        cdecl itoa, dword [ebp - 20], .s6, 6, 10, 0
-        cdecl draw_str, dword 0, dword 0, dword 0x0700, dword .s4
+        ; cdecl itoa, ecx, .s4, 6, 10, 0
+        ; cdecl itoa, edx, .s5, 6, 10, 0
+        ; cdecl itoa, dword [ebp - 20], .s6, 6, 10, 0
+        ; cdecl draw_str, dword 0, dword 0, dword 0x0700, dword .s4
 
         int 0x82  ; draw_dot
 
@@ -117,24 +117,82 @@ task_3:
 .s6: db "------", 0
 
 DRAW_PARAM:
-    istruc Rose
-        at Rose.x0, dd 16
-        at Rose.y0, dd 32
-        at Rose.x1, dd 416
-        at Rose.y1, dd 432
+    .t3:
+        istruc Rose
+            at Rose.x0, dd 32
+            at Rose.y0, dd 32
+            at Rose.x1, dd 208
+            at Rose.y1, dd 208
 
-        at Rose.n, dd 2
-        at Rose.d, dd 1
+            at Rose.n, dd 2
+            at Rose.d, dd 1
 
-        at Rose.color_x, dd 0x0007
-        at Rose.color_y, dd 0x0007
-        at Rose.color_z, dd 0x000f
-        at Rose.color_s, dd 0x030f
-        at Rose.color_f, dd 0x000f
-        at Rose.color_b, dd 0x0003
+            at Rose.color_x, dd 0x0007
+            at Rose.color_y, dd 0x0007
+            at Rose.color_z, dd 0x000f
+            at Rose.color_s, dd 0x030f
+            at Rose.color_f, dd 0x000f
+            at Rose.color_b, dd 0x0003
 
-        at Rose.title, db "Task-3", 0
-    iend
+            at Rose.title, db "Task-3", 0
+        iend
+    .t4:
+        istruc Rose
+            at Rose.x0, dd 248
+            at Rose.y0, dd 32
+            at Rose.x1, dd 424
+            at Rose.y1, dd 208
+
+            at Rose.n, dd 3
+            at Rose.d, dd 1
+
+            at Rose.color_x, dd 0x0007
+            at Rose.color_y, dd 0x0007
+            at Rose.color_z, dd 0x000f
+            at Rose.color_s, dd 0x040f
+            at Rose.color_f, dd 0x000f
+            at Rose.color_b, dd 0x0004
+
+            at Rose.title, db "Task-4", 0
+        iend
+    .t5:
+        istruc Rose
+            at Rose.x0, dd 32
+            at Rose.y0, dd 272
+            at Rose.x1, dd 208
+            at Rose.y1, dd 448
+
+            at Rose.n, dd 2
+            at Rose.d, dd 6
+
+            at Rose.color_x, dd 0x0007
+            at Rose.color_y, dd 0x0007
+            at Rose.color_z, dd 0x000f
+            at Rose.color_s, dd 0x050f
+            at Rose.color_f, dd 0x000f
+            at Rose.color_b, dd 0x0005
+
+            at Rose.title, db "Task-5", 0
+        iend
+    .t6:
+        istruc Rose
+            at Rose.x0, dd 248
+            at Rose.y0, dd 272
+            at Rose.x1, dd 424
+            at Rose.y1, dd 448
+
+            at Rose.n, dd 4
+            at Rose.d, dd 6
+
+            at Rose.color_x, dd 0x0007
+            at Rose.color_y, dd 0x0007
+            at Rose.color_z, dd 0x000f
+            at Rose.color_s, dd 0x060f
+            at Rose.color_f, dd 0x000f
+            at Rose.color_b, dd 0x0006
+
+            at Rose.title, db "Task-6", 0
+        iend
 
 
 fpu_rose_init:
