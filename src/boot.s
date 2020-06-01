@@ -6,9 +6,30 @@ BITS 16
 
 ORG BOOT_LOAD
 
-jmp ipl
-
+entry:
+    jmp ipl
+    times 3 - ($ - $$) db 0x90
 bpb:
+    db 'OEM-NAME'   ; oem name
+    dw 512          ; セクタバイト数
+    db 1            ; クラスタのセクタ数
+    dw 32
+    db 2
+    dw 512
+    db 0xf8
+    dw 256
+    dw 0x10
+    dw 2
+    dd 0
+
+    dd 0
+    db 0x80
+    db 0
+    db 0x29
+    dd 0xbeef
+    db 'BOOTABLE   '
+    db 'FAT16   '
+
     times 90 - ($ - $$) db 0x90  ; nop
 
 ipl:

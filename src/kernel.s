@@ -123,3 +123,5 @@ FONT_ADDR: dd FONT_8_16
 %include "src/modules/protect/memcpy.s"
 
 times KERNEL_SIZE - ($ - $$) db 0
+
+%include "src/fat.s"

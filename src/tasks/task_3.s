@@ -72,7 +72,7 @@ task_3:
         cdecl fpu_rose_update, ebx, ecx, eax
 
         mov edx, 0
-        add eax, 10000
+        add eax, 3000
         ; mov ebx, 360 * 100
         ; div ebx
         
@@ -144,7 +144,7 @@ DRAW_PARAM:
             at Rose.y1, dd 208
 
             at Rose.n, dd 3
-            at Rose.d, dd 1
+            at Rose.d, dd 5
 
             at Rose.color_x, dd 0x0007
             at Rose.color_y, dd 0x0007
@@ -162,8 +162,8 @@ DRAW_PARAM:
             at Rose.x1, dd 208
             at Rose.y1, dd 448
 
-            at Rose.n, dd 2
-            at Rose.d, dd 6
+            at Rose.n, dd 1
+            at Rose.d, dd 5
 
             at Rose.color_x, dd 0x0007
             at Rose.color_y, dd 0x0007
@@ -181,8 +181,8 @@ DRAW_PARAM:
             at Rose.x1, dd 424
             at Rose.y1, dd 448
 
-            at Rose.n, dd 4
-            at Rose.d, dd 6
+            at Rose.n, dd 5
+            at Rose.d, dd 1
 
             at Rose.color_x, dd 0x0007
             at Rose.color_y, dd 0x0007
